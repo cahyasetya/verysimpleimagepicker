@@ -1,4 +1,4 @@
-package id.my.developer.imagepicker;
+package id.my.developer.imagepicker.image_picker_activity;
 
 import java.util.List;
 
@@ -11,5 +11,6 @@ import id.my.developer.imagepicker.models.Media;
 public interface ImagePickerInterface {
     interface Callback{
         void onPicturesLoaded(List<Media> mediaList);
+        void onMediaSelected();
     }
 }

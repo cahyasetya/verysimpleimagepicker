@@ -10,6 +10,15 @@ public class Media {
     private String dateTaken;
     private String path;
     private int type;
+    private boolean selected;
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
 
     public String getId() {
         return id;
