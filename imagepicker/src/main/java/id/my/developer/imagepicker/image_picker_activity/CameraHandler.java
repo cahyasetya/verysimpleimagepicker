@@ -56,7 +56,7 @@ public class CameraHandler {
                 e.printStackTrace();
             }
             if(photoFile!=null){
-                Uri photoUri = FileProvider.getUriForFile(activity, BuildConfig.APPLICATION_ID+".provider",photoFile);
+                Uri photoUri = FileProvider.getUriForFile(activity, activity.getPackageName()+".provider",photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                 activity.startActivityForResult(takePictureIntent,1);
             }
