@@ -9,6 +9,10 @@ import android.support.constraint.ConstraintLayout;
 public class Constants {
     public static int maxVideoDuration = 15;
     public static int maxVideoSize = 15;
+    public static int videoQuality = 0;
+
+    public static final int VIDEO_QUALITY_LOW = 0;
+    public static final int VIDEO_QUALITY_HIGH = 1;
 
     private static final Constants ourInstance = new Constants();
 

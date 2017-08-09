@@ -53,9 +53,6 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     private void init(){
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        maxVideoDuration = getIntent().getIntExtra("max_video_duration",15);
-        maxVideoSize = getIntent().getIntExtra("max_video_size",15);
-
         doneButton = (Button) findViewById(R.id.done_button);
         mediaRecyclerView = (RecyclerView) findViewById(R.id.media_recyclerview);
         presenter.loadAllMedia();
