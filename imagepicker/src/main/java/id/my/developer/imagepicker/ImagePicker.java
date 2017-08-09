@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import id.my.developer.imagepicker.image_picker_activity.ImagePickerActivity;
+import id.my.developer.imagepicker.models.Constants;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -18,16 +19,18 @@ import pub.devrel.easypermissions.EasyPermissions;
 public class ImagePicker {
     private Activity activity;
     private int requestCode;
-    private String[] perms=new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};
-    private List<String> permissions=new ArrayList<>();
 
     public ImagePicker(Activity activity, int requestCode) {
         this.activity = activity;
         this.requestCode = requestCode;
     }
 
-    public void requestRequiredPermission(){
-        new AppSettingsDialog.Builder(activity).build().show();
+    public void setMaxVideoDuration(int maxDuration){
+        Constants.maxVideoDuration = maxDuration;
+    }
+
+    public void setMaxVideoSize(int videoSize){
+        Constants.maxVideoSize = videoSize;
     }
 
     public void start(){

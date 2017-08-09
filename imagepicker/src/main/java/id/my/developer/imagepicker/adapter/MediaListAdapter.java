@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -23,6 +24,7 @@ import com.bumptech.glide.request.target.Target;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import id.my.developer.imagepicker.R;
 import id.my.developer.imagepicker.image_picker_activity.ImagePickerInterface;
@@ -58,23 +60,35 @@ public class MediaListAdapter extends RecyclerView.Adapter<MediaListAdapter.Medi
         if(media.getType()==2) {
             holder.videoIcon.setVisibility(View.GONE);
             Glide.with(context).load(media.getPath()).centerCrop().diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.mediaHolder);
+            holder.videoDuration.setVisibility(View.GONE);
         }
         else if(media.getType()==1) {
             Glide.with(context).load(Uri.fromFile(new File(media.getPath()))).centerCrop().into(holder.mediaHolder);
             holder.videoIcon.setVisibility(View.VISIBLE);
+            holder.videoDuration.setText(buildTime(media.getDuration()));
+            holder.videoDuration.setVisibility(View.VISIBLE);
         }
+        if(media.isSelected()){
+            holder.imageStatus.setSelected(true);
+        }else holder.imageStatus.setSelected(false);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(curerntlySeleted>-1) {
                     currentlyViewHolder.imageStatus.setSelected(false);
+                    mediaList.get(curerntlySeleted).setSelected(false);
                 }
                 curerntlySeleted = position;
                 currentlyViewHolder = holder;
                 currentlyViewHolder.imageStatus.setSelected(true);
+                mediaList.get(position).setSelected(true);
                 callback.onMediaSelected();
             }
         });
+    }
+
+    private String buildTime(long milis){
+        return String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(milis),TimeUnit.MILLISECONDS.toSeconds(milis));
     }
 
     public String getSelectedMedia(){
@@ -90,8 +104,10 @@ public class MediaListAdapter extends RecyclerView.Adapter<MediaListAdapter.Medi
         ImageView mediaHolder;
         ImageView videoIcon;
         ImageView imageStatus;
+        TextView videoDuration;
         public MediaViewHolder(View itemView) {
             super(itemView);
+            videoDuration = (TextView)itemView.findViewById(R.id.video_duration);
             mediaHolder = (ImageView)itemView.findViewById(R.id.media_holder);
             videoIcon = (ImageView)itemView.findViewById(R.id.video_icon);
             imageStatus = (ImageView) itemView.findViewById(R.id.image_status);

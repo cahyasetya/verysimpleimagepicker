@@ -36,7 +36,8 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     private MediaListAdapter adapter;
     private GridLayoutManager lm;
     private String[] cameraAndWritePermissions = new String[]{Manifest.permission.CAMERA};
-    private String[] readFilesPermission = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};
+    private int maxVideoDuration = 15;
+    private int maxVideoSize = 15;
 
     private static final int RC_CAMERA_AND_WRITE_FILE= 123;
     private static final int RC_VIDEO_AND_WRITE_FILE= 124;
@@ -51,6 +52,10 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
 
     private void init(){
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        maxVideoDuration = getIntent().getIntExtra("max_video_duration",15);
+        maxVideoSize = getIntent().getIntExtra("max_video_size",15);
+
         doneButton = (Button) findViewById(R.id.done_button);
         mediaRecyclerView = (RecyclerView) findViewById(R.id.media_recyclerview);
         presenter.loadAllMedia();

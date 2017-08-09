@@ -1,15 +1,21 @@
 package id.my.developer.imagepicker.utils;
 
+import android.content.Context;
 import android.database.Cursor;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import id.my.developer.imagepicker.models.Constants;
 import id.my.developer.imagepicker.models.Media;
 
 /**
@@ -70,6 +76,8 @@ public class MediaStoreManager {
     }
 
     public static List<Media> getAllVideos(AppCompatActivity activity){
+        Context context = (Context) activity;
+
         List<Media> mediaList = new ArrayList<>();
         String[] projections = new String[]{MediaStore.Video.Media.DATA};
         String selection = MediaStore.Video.Media.MIME_TYPE+" =?";
@@ -77,18 +85,35 @@ public class MediaStoreManager {
 
         Uri uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
 
-        Cursor cur = activity.getContentResolver().query(uri, projections, selection, selectionArgs, null);
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        Cursor cur = activity.getContentResolver().query(uri, projections, null, null, null);
 
         if (cur.moveToFirst()) {
             int dataColumn = cur.getColumnIndex(MediaStore.Video.Media.DATA);
             do {
-                Media media = new Media();
-                media.setType(1);
-                media.setPath(cur.getString(dataColumn));
-                mediaList.add(media);
+                File file = new File(cur.getString(dataColumn));
+                long length = file.length()/(1024*1024);
+
+                Uri videoUri = Uri.fromFile(file);
+
+                try {
+                    retriever.setDataSource(context,videoUri);
+                    String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+                    long timeInMilis = Long.parseLong(time);
+                    if(timeInMilis/1000<= Constants.maxVideoDuration && length<=Constants.maxVideoSize){
+                        Media media = new Media();
+                        media.setType(1);
+                        media.setPath(file.getAbsolutePath());
+                        media.setDuration(timeInMilis);
+                        mediaList.add(media);
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             } while (cur.moveToNext());
         }
         cur.close();
+        retriever.release();
         return mediaList;
     }
 }

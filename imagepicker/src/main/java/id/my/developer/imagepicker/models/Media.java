@@ -11,6 +11,15 @@ public class Media {
     private String path;
     private int type;
     private boolean selected;
+    private long duration=0;
+
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
 
     public boolean isSelected() {
         return selected;
